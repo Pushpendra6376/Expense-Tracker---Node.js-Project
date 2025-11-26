@@ -14,8 +14,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
+app.get('/expense.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'expense.html'));
+});
 
-app.use(authRoutes);
+
+app.use('/auth', authRoutes);
 
 // Database connection check
 sequelize.authenticate()
