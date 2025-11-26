@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const sequelize = require("../utils/db-collection");
 const User = require('../models/user')
 
@@ -11,10 +12,14 @@ exports.createUser = async (req, res) =>{
             return res.status(400).json({message: "Email is already registered"})
         }
 
+
+        //Hased encryption for user password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const newUser = await User.create({
             username,
             email,
-            password,
+            password: hashedPassword,
         });
 
         res.status(201).json({
@@ -38,7 +43,8 @@ exports.verifyUser = async (req,res) =>{
         }
 
         //we will validate the password is correct or not
-        if(user.password !== password){
+        const validPass = await bcrypt.compare(password, user.password);
+        if(!validPass){
             return res.status(401).json({message: "password is incorrect"});
         }
 
