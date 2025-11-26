@@ -1,3 +1,4 @@
+// Toggle between Sign Up and Login forms
 const signUpForm = document.querySelector('.sign-up');
 const loginForm = document.querySelector('.login');
 const showSignUpBtn = document.getElementById('showSignUp');
@@ -17,23 +18,69 @@ showLoginBtn.addEventListener('click', () => {
     showSignUpBtn.classList.remove('active');
 });
 
-// SIGNUP FORM console output
-signUpForm.addEventListener('submit', (e) => {
+// sending new user data to the backend
+signUpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const data = {
-        name: document.getElementById("name").value,
+        username: document.getElementById("name").value,
         email: document.getElementById("email").value,
         password: document.getElementById("password").value,
     };
+
     console.log("Sign Up Data:", JSON.stringify(data, null, 2));
+
+    try {
+        const res = await fetch("http://localhost:3000/auth/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+        console.log(result);
+
+        if (res.status === 201) {
+            alert("User created successfully!");
+            window.location.href = "/expense.html"; 
+        } else {
+            alert(result.message || "Signup failed");
+        }
+    } catch (err) {
+        console.log(err);
+        alert("Something went wrong!");
+    }
 });
 
-    // LOGIN FORM console output
-loginForm.addEventListener('submit', (e) => {
+// login for existing user 
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const data = {
         email: document.getElementById("loginEmail").value,
         password: document.getElementById("loginPassword").value,
     };
+
     console.log("Login Data:", JSON.stringify(data, null, 2));
+
+    try {
+        const res = await fetch("http://localhost:3000/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+        console.log(result);
+
+        if (res.status === 200) {
+            alert("Login successful!");
+            window.location.href = "/expense.html"; 
+        } else {
+            alert(result.message || "Login failed");
+        }
+    } catch (err) {
+        console.log(err);
+        alert("Something went wrong!");
+    }
 });
