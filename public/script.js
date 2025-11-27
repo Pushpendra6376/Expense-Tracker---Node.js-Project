@@ -74,6 +74,7 @@ loginForm.addEventListener('submit', async (e) => {
         console.log(result);
 
         if (res.status === 200) {
+             localStorage.setItem("token", result.token);
             alert("Login successful!");
             window.location.href = "/expense.html"; 
         } else {

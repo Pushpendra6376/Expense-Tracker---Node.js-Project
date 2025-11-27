@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const authController = require('../controllers/authController');
 
+
 // to create an user in our db 
-router.post('/signup', authController.createUser);
+router.post('/signup', authController.signUp);
 
 // to login the user 
-router.post('/login', authController.verifyUser);
+router.post('/login', authController.login);
 
 module.exports = router;

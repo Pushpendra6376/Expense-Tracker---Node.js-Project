@@ -1,9 +1,10 @@
 const bcrypt = require('bcrypt');
 const sequelize = require("../utils/db-collection");
+const jwt = require("jsonwebtoken");
 const User = require('../models/user')
 
 // to create an user in our panel
-exports.createUser = async (req, res) =>{
+exports.signUp = async (req, res) =>{
     try {
         const {username, email, password} = req.body;
 
@@ -33,7 +34,7 @@ exports.createUser = async (req, res) =>{
 }
 
 // when its comes to login we will verify user email and password and then let him login 
-exports.verifyUser = async (req,res) =>{
+exports.login = async (req,res) =>{
     try {
         const {email, password} = req.body;
 
@@ -48,9 +49,17 @@ exports.verifyUser = async (req,res) =>{
             return res.status(401).json({message: "password is incorrect"});
         }
 
+
+        //verifying the user with the jwt token
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "24h" }
+        );
         // for sucessfully login 
         res.status(200).json({
             message:"User logged in successfully",
+            token: token,
             user:{
                 id:user.id,
                 username: user.username,
