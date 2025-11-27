@@ -3,7 +3,7 @@ const path = require("path");
 require("dotenv").config();
 const sequelize = require("./utils/db-collection"); 
 const authRoutes = require("./routes/authRoute"); 
-
+const expenseRotues = require('./routes/expenseRoute');
 const app = express();
 
 // Middleware to accept JSON data
@@ -20,6 +20,7 @@ app.get('/expense.html', (req, res) => {
 
 
 app.use('/auth', authRoutes);
+app.use('/expense', expenseRotues);
 
 // Database connection check
 sequelize.authenticate()
@@ -27,7 +28,7 @@ sequelize.authenticate()
   .catch((err) => console.log("DB Connection is Failed:", err));
 
 // syncing our tables 
-sequelize.sync()
+sequelize.sync({alter:true})
   .then(() => console.log("All models synced successfully"))
   .catch((err) => console.log("Sync error:", err));
 

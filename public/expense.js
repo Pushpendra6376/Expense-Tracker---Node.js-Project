@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
             });
 
@@ -25,7 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const expenses = await res.json();
+            const resData = await res.json();
+            const expenses = resData.expenses;
             expenseList.innerHTML = ""; // Clear list before rendering
 
             expenses.forEach(exp => {
@@ -83,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Delete expense
     async function deleteExpense(id) {
         try {
-            const res = await fetch(`http://localhost:3000/expense/${id}`, {
+            const res = await fetch(`http://localhost:3000/expense/delete/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,

@@ -18,7 +18,7 @@ const Expense = sequelize.define("Expense", {
 });
 
 // Expense belongs to a User
-User.hasMany(Expense);
-Expense.belongsTo(User);
+User.hasMany(Expense, { foreignKey: 'userId' });
+Expense.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = Expense;
