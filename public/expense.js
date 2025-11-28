@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fetch and display all expenses on page load
     async function fetchExpenses() {
         try {
-            const res = await fetch("http://localhost:3000/expense", {
+            const res = await fetch("http://localhost:3000/expense/", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
