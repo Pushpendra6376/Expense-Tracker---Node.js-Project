@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 
+
+// jwt authentication for our user and also Bearer token
 exports.authenticate = (req, res, next) => {
     try {
         const token = req.headers['authorization']?.split(" ")[1]; 

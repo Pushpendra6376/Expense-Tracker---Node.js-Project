@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const expenseForm = document.getElementById("expenseForm");
     const expenseList = document.getElementById("expenseList");
 
-    // Get token from localStorage
+    // Get Bearer token from localStorage
     const token = localStorage.getItem("token");
     if (!token) {
         alert("Please login first!");
         window.location.href = "/";
-        return; // stop execution
+        return; // if the token not found then stop execution
     }
 
     // Fetch and display all expenses on page load
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Add new expense
+    // Add new expense from our expense.html
     expenseForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 

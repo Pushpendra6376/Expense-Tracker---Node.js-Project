@@ -1,5 +1,7 @@
 const Expense = require("../models/expense");
 
+
+//Adding expense
 exports.addExpense = async (req, res) => {
     try {
         const { amount, description, category } = req.body;
@@ -18,7 +20,7 @@ exports.addExpense = async (req, res) => {
     }
 };
 
-
+// fetching expense for a perticular user
 exports.getExpenses = async (req,res)=>{
     try{
         const expenses = await Expense.findAll({ where:{ userId: req.user.userId }});
@@ -30,6 +32,8 @@ exports.getExpenses = async (req,res)=>{
     }
 };
 
+
+// deleting the expense
 exports.deleteExpenseById = async (req,res) =>{
     try {
         const expenseId = req.params.id;  
