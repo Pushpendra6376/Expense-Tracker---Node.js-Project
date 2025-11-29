@@ -3,34 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
     <title>Expense Tracker</title>
 </head>
 <body>
-    <h1>Welcome, User!</h1>
+    <div class="expense-container">
 
-    <form id="expenseForm">
-        <label for="amount">Expense Amount:</label>
-        <input type="number" id="amount" required /><br><br>
+        <h1>Your Expenses</h1>
 
-        <label for="description">Description:</label><br>
-        <textarea id="description" required></textarea><br><br>
+        <form id="expenseForm">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" required>
 
-        <label for="category">Category:</label><br>
-        <select id="category" required>
-            <option value="">Select Category</option>
-            <option value="Food">Food</option>
-            <option value="Petrol">Petrol</option>
-            <option value="Credit Card">Credit Card</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Travel">Travel</option>
-        </select><br><br>
+            <label for="description">Description:</label>
+            <textarea id="description" required></textarea>
 
-        <button type="submit">Add Expense</button>
-    </form>
+            <label for="category">Category:</label>
+            <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="Food">Food</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Travel">Travel</option>
+            </select>
 
-    <h2>Expenses</h2>
-    <ul id="expenseList"></ul>
+            <button type="submit">Add Expense</button>
+        </form>
+
+        <h2 style="margin-top:20px;">Expense List</h2>
+        <ul id="expenseList"></ul>
+
+    </div>
+    <div class="membership">
+        <!-- need this in top right corner -->
+        <button  type="button">Buy Premium Membership</button> 
+    </div>
 
     <script src="/expense.js"></script>
 </body>
+
 </html>

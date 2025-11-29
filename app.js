@@ -4,6 +4,7 @@ require("dotenv").config();
 const sequelize = require("./utils/db-collection"); 
 const authRoutes = require("./routes/authRoute"); 
 const expenseRotues = require('./routes/expenseRoute');
+const paymentRoute = require('./routes/paymentRoute');
 const app = express();
 
 // Middleware to accept JSON data
@@ -18,9 +19,15 @@ app.get('/expense.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'expense.html'));
 });
 
+app.get('/payment-status.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'payment-status.html'));
+});
+
+
 
 app.use('/auth', authRoutes);
 app.use('/expense', expenseRotues);
+app.use('/payment', paymentRoute);
 
 // Database connection check
 sequelize.authenticate()

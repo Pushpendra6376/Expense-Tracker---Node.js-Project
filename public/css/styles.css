@@ -1,4 +1,4 @@
-/* Reset */
+
 * {
     margin: 0;
     padding: 0;
@@ -7,19 +7,22 @@
 }
 
 body {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 60px;
     background: #f5f7fb;
+    color: #333;
 }
 
-/* Main container */
-.container {
+
+.container,
+.expense-container {
     width: 380px;
 }
 
-/* Toggle Buttons */
+
 .toggle-box {
     display: flex;
     justify-content: space-between;
@@ -29,67 +32,60 @@ body {
 .toggle-box button {
     flex: 1;
     padding: 12px 0;
-    border: none;
     background: #dbe1ee;
+    border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: 0.3s;
 }
 
 .toggle-box button.active {
     background: #4a72de;
-    color: white;
+    color: #fff;
 }
 
-/* Forms */
+
 .form-box {
     background: white;
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     border: 1px solid #e1e5ea;
     animation: fadeIn 0.3s ease;
 }
 
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
 form h2 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 22px;
-    color: #333;
 }
 
-/* Labels */
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: #444;
-}
 
-/* Inputs */
-input {
+input,
+textarea,
+select {
     width: 100%;
     padding: 10px 12px;
     margin-bottom: 18px;
     border: 1px solid #ccd1d7;
     border-radius: 6px;
     font-size: 15px;
-    transition: border-color 0.3s ease;
+    transition: 0.3s ease;
 }
 
-input:focus {
+input:focus,
+textarea:focus,
+select:focus {
     border-color: #5b8def;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(91, 141, 239, 0.15);
+    box-shadow: 0 0 0 2px rgba(91, 141, 239, 0.18);
 }
 
-/* Button */
+
 button[type="submit"] {
     width: 100%;
     background: #4a72de;
@@ -98,8 +94,8 @@ button[type="submit"] {
     padding: 12px;
     font-size: 16px;
     border-radius: 6px;
-    cursor: pointer;
     font-weight: 600;
+    cursor: pointer;
     transition: 0.3s ease;
 }
 
@@ -107,8 +103,87 @@ button[type="submit"]:hover {
     background: #3f61c9;
 }
 
-/* Smooth fade animation */
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+.expense-container {
+    margin-top: 20px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border: 1px solid #e5e8ec;
+}
+
+.expense-container h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#expenseForm label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+}
+
+
+#expenseList {
+    list-style: none;
+    margin-top: 15px;
+}
+
+#expenseList li {
+    background: #eef2ff;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#expenseList button {
+    padding: 6px 10px;
+    font-size: 13px;
+    background: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#expenseList button:hover {
+    background: #c0392b;
+}
+
+.membership {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+}
+
+.membership button {
+    background: #ffb800;
+    color: #000;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s ease;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+}
+
+.membership button:hover {
+    background: #e5a200;
+    transform: translateY(-1px);
 }

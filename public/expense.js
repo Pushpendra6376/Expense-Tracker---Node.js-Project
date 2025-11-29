@@ -107,3 +107,39 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial fetch
     fetchExpenses();
 });
+
+document.querySelector(".membership button").addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Please login first!");
+        return;
+    }
+
+    try {
+        // 1. Create order
+        const res = await fetch("http://localhost:3000/payment/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ amount: 299, phone: "9999999999" })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.error || "Failed to create order");
+            return;
+        }
+
+        const { cfOrder } = await res.json();
+
+        // 2. Redirect to Cashfree payment page
+        window.location.href = cfOrder.payment_link;
+
+    } catch (err) {
+        console.error(err);
+        alert("Error creating order");
+    }
+});
