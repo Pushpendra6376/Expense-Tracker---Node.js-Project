@@ -1,16 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
     const expenseForm = document.getElementById("expenseForm");
     const expenseList = document.getElementById("expenseList");
+    const membershipBtn = document.querySelector(".membership button");
+    const cashfree = Cashfree({
+                mode: "sandbox",
+            });
 
     // Get Bearer token from localStorage
     const token = localStorage.getItem("token");
     if (!token) {
         alert("Please login first!");
         window.location.href = "/";
-        return; // if the token not found then stop execution
+        return;
     }
 
-    // Fetch and display all expenses on page load
+    // Fetch and display all expenses
     async function fetchExpenses() {
         try {
             const res = await fetch("http://localhost:3000/expense/", {
@@ -26,9 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const resData = await res.json();
-            const expenses = resData.expenses;
-            expenseList.innerHTML = ""; // Clear list before rendering
+            const { expenses } = await res.json();
+            expenseList.innerHTML = "";
 
             expenses.forEach(exp => {
                 const li = document.createElement("li");
@@ -38,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 expenseList.appendChild(li);
 
-                // Delete button event
                 li.querySelector("button").addEventListener("click", async () => {
                     await deleteExpense(exp.id);
                 });
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Add new expense from our expense.html
+    // Add new expense
     expenseForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -72,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await res.json();
             if (res.status === 201) {
                 expenseForm.reset();
-                fetchExpenses(); // Refresh list
+                fetchExpenses();
             } else {
                 alert(result.message || "Failed to add expense");
             }
@@ -104,42 +106,48 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Initial fetch
-    fetchExpenses();
-});
+    // Membership button click
+    document.querySelector(".membership button").addEventListener("click", async () => {
+        console.log(" BUTTON CLICKED");
 
-document.querySelector(".membership button").addEventListener("click", async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        alert("Please login first!");
-        return;
-    }
-
-    try {
-        // 1. Create order
-        const res = await fetch("http://localhost:3000/payment/order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ amount: 299, phone: "9999999999" })
-        });
-
-        if (!res.ok) {
-            const err = await res.json();
-            alert(err.error || "Failed to create order");
-            return;
+        const token = localStorage.getItem("token");
+        if (!token){
+            console.log(" No Token Found");
+            return alert("Please login first");
         }
 
-        const { cfOrder } = await res.json();
+        console.log(" Sending Order Request to Backend...");
 
-        // 2. Redirect to Cashfree payment page
-        window.location.href = cfOrder.payment_link;
+        try {
+            const res = await fetch("http://localhost:3000/payment/order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ amount: 299 })
+            });
 
-    } catch (err) {
-        console.error(err);
-        alert("Error creating order");
-    }
+            console.log(" Raw Response =>", res.status);
+
+            const data = await res.json();
+            console.log(" Parsed Backend Response =>", data);
+
+            if (!data || !data.cfOrder) {
+                return alert(" Order not created");
+            }
+
+            console.log(" ORDER CREATED, SESSION ->", data.cfOrder.payment_session_id);
+
+            const checkout = new cashfree.checkout({
+                paymentSessionId: data.cfOrder.payment_session_id,
+                redirectTarget: "_blank"
+            });
+
+        } catch (e) {
+            console.log(" FETCH ERROR:", e);
+            alert("Error while creating order");
+        }
+    });
+    fetchExpenses();
 });

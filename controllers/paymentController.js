@@ -10,9 +10,9 @@ exports.createOrder = async (req, res) => {
     try {
         const { amount } = req.body;
         const userId = req.user.userId;
-        const orderId = "devstudio_" + Date.now();
+        const orderId = "ExpenseApp" + Date.now();
 
-        // Save order in DB as PENDING
+        // Saving order in DB as PENDING
         await Payment.create({
             orderId,
             userId,
@@ -25,10 +25,10 @@ exports.createOrder = async (req, res) => {
             orderId,
             amount,
             customerId: `user_${userId}`,
-            customerPhone: req.body.phone || "9999999999"
+            customerPhone: req.body.phone || "9999999999",
         });
 
-        res.status(200).json({ cfOrder }); // <-- cfOrder ke andar payment_link aayega
+        res.status(200).json({ cfOrder });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });

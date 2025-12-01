@@ -1,31 +1,39 @@
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
 
+// Cashfree 
 const cashfree = new Cashfree(
-    CFEnvironment.SANDBOX,
+    CFEnvironment.SANDBOX,                
     process.env.CASHFREE_APPID,
     process.env.CASHFREE_SECRETKEY
 );
 
-const createCashfreeOrder = async ({ orderId, amount, customerId, customerPhone, returnUrl }) => {
-    const request = {
-        order_amount: amount,
-        order_currency: "INR",
-        order_id: orderId,
-        customer_details: {
-            customer_id: customerId,
-            customer_phone: customerPhone
-        },
-        order_meta: {
-            return_url: `http://localhost:3000/payment-status.html?order_id=${orderId}`
-        }
-    };
-
+const createCashfreeOrder = async ({ orderId, amount, customerId, customerPhone }) => {
     try {
+        const request = {
+            order_amount: amount,
+            order_currency: "INR",
+            order_id: orderId,
+            customer_details: {
+                customer_id: customerId,
+                customer_phone: customerPhone
+            },
+            order_meta: {
+                return_url: `http://localhost:3000/payment/verify?order_id=${orderId}`, 
+            }
+        };
+
         const response = await cashfree.PGCreateOrder(request);
-        return response.data.data; // <-- yaha pe 'data' ka andar ka 'data' return karna important hai
+        console.log("Cashfree API Response =>", response.data);
+
+        return {  
+            order_id: response.data.order_id,
+            payment_session_id: response.data.payment_session_id  
+        };
+
     } catch (error) {
-        throw new Error(error.response?.data?.message || "Cashfree order creation failed");
+        console.log("Cashfree Error", error.response?.data || error);
+        throw new Error(error.response?.data?.message || "Order Creation Failed");
     }
 };
 
-module.exports = { createCashfreeOrder };
+module.exports = {createCashfreeOrder};

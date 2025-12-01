@@ -19,11 +19,6 @@ app.get('/expense.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'expense.html'));
 });
 
-app.get('/payment-status.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'payment-status.html'));
-});
-
-
 
 app.use('/auth', authRoutes);
 app.use('/expense', expenseRotues);
