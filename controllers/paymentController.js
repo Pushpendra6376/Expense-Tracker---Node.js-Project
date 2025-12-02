@@ -39,30 +39,37 @@ exports.createOrder = async (req, res) => {
 exports.verifyPayment = async (req, res) => {
     try {
         const { order_id } = req.query;
-
+        console.log("🔍 VERIFY ORDER ID =>", order_id);
+        
         const cfResponse = await cashfree.PGOrderFetchPayments(order_id);
+        console.log("Cashfree Verify Data =>", cfResponse.data);
 
-        let status = "FAILED";
-        if (cfResponse?.data?.[0]?.txStatus === "SUCCESS") {
-            status = "SUCCESSFUL";
+        let payments = cfResponse.data;
+        console.log("Cashfree Payments =>", payments);
+        const successPayment = payments.find(p => p.payment_status === "SUCCESS");
+
+        if (successPayment) {
+            await Payment.update(
+                { status: "SUCCESSFUL" },
+                { where: { orderId: order_id } }
+            );
+
+            return res.json({
+                message: "Payment Successful",
+                status: "SUCCESSFUL"
+            });
         }
 
-        // Update DB
-        const payment = await Payment.findOne({ where: { orderId: order_id } });
-        if (payment) {
-            payment.status = status;
-            await payment.save();
-        }
+        // Otherwise pending/failed
+        await Payment.update(
+            { status: "PENDING" },
+            { where: { orderId: order_id } }
+        );
 
-        // Update user premium if successful
-        if (status === "SUCCESSFUL") {
-            const User = require("../models/user");
-            const user = await User.findByPk(payment.userId);
-            user.isPremium = true;
-            await user.save();
-        }
-
-        res.json({ status });
+        return res.json({
+            message: "Payment Not Completed",
+            status: "FAILED"
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Payment verification failed" });
