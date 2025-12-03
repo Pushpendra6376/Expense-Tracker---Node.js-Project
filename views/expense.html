@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title>Expense Tracker</title>
-</head>
-<body>
-    <div class="expense-container">
+<div class="expense-container">
+
+        <!-- Premium Banner -->
+        <h2 id="premium-message" style="color:green; display:none;">
+            🌟 You are a Premium User Now!
+        </h2>
 
         <h1>Your Expenses</h1>
 
@@ -35,12 +31,32 @@
         <ul id="expenseList"></ul>
 
     </div>
+
     <div class="membership">
-        <button  type="button">Buy Premium Membership</button> 
+        <button id="buy-premium" type="button">Buy Premium Membership</button>
+
+        <!-- Leaderboard Button -->
+        <button id="show-leaderboard" style="display:none; margin-top:10px;">
+            Show Leaderboard
+        </button>
     </div>
-    
+
+    <!-- Leaderboard Section -->
+    <div id="leaderboard-section" style="display:none; margin-top:20px;">
+        <h2>Leaderboard</h2>
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Total Expense</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+        </table>
+    </div>
+
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
     <script src="/expense.js"></script>
 </body>
-
 </html>

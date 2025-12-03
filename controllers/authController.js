@@ -51,8 +51,11 @@ exports.login = async (req,res) =>{
 
 
         //verifying the user with the jwt token
-        const token = jwt.sign(
-            { userId: user.id, email: user.email },
+        const token = jwt.sign({ 
+            userId: user.id, 
+            email: user.email,
+            isPremium: user.isPremium   // premium checking before logging in  
+        },
             process.env.JWT_SECRET,
             { expiresIn: "24h" }
         );
@@ -64,6 +67,7 @@ exports.login = async (req,res) =>{
                 id:user.id,
                 username: user.username,
                 email: user.email,
+                isPremium: user.isPremium
             }
         })
     } catch (error) {

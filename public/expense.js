@@ -2,11 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const expenseForm = document.getElementById("expenseForm");
     const expenseList = document.getElementById("expenseList");
     const membershipBtn = document.querySelector(".membership button");
-    const cashfree = Cashfree({
-                mode: "sandbox",
-            });
+    const showLeaderboardBtn = document.getElementById("show-leaderboard");
+    const leaderboardSection = document.getElementById("leaderboard-section");
+    const leaderboardBody = document.getElementById("leaderboard-body");
+    const premiumMessage = document.getElementById("premium-message");
 
-    // Get Bearer token from localStorage
+    const cashfree = Cashfree({ mode: "sandbox" });
+
     const token = localStorage.getItem("token");
     if (!token) {
         alert("Please login first!");
@@ -89,9 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch(`http://localhost:3000/expense/delete/${id}`, {
                 method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                },
+                headers: { "Authorization": `Bearer ${token}` },
             });
 
             if (res.status === 200) {
@@ -107,47 +107,73 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Membership button click
-    document.querySelector(".membership button").addEventListener("click", async () => {
-        console.log(" BUTTON CLICKED");
-
-        const token = localStorage.getItem("token");
-        if (!token){
-            console.log(" No Token Found");
-            return alert("Please login first");
-        }
-
-        console.log(" Sending Order Request to Backend...");
-
+    membershipBtn.addEventListener("click", async () => {
         try {
             const res = await fetch("http://localhost:3000/payment/order", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
+                    "Authorization": "Bearer " + token,
                 },
-                body: JSON.stringify({ amount: 299 })
+                body: JSON.stringify({ amount: 299 }),
             });
 
-            console.log(" Raw Response =>", res.status);
-
             const data = await res.json();
-            console.log(" Parsed Backend Response =>", data);
+            if (!data || !data.cfOrder) return alert("Order not created");
 
-            if (!data || !data.cfOrder) {
-                return alert(" Order not created");
-            }
-
-            console.log(" ORDER CREATED, SESSION ->", data.cfOrder.payment_session_id);
-
-            const checkout = new cashfree.checkout({
+            // Launch Cashfree payment
+            new cashfree.checkout({
                 paymentSessionId: data.cfOrder.payment_session_id,
-                redirectTarget: "_blank"
+                redirectTarget: "_self"
             });
 
         } catch (e) {
-            console.log(" FETCH ERROR:", e);
+            console.error("Error while creating order:", e);
             alert("Error while creating order");
         }
     });
+
+    // Show leaderboard
+    showLeaderboardBtn.addEventListener("click", async () => {
+        try {
+            const res = await fetch("http://localhost:3000/expense/leaderboard", {
+                headers: { "Authorization": `Bearer ${token}` },
+            });
+            const data = await res.json();
+
+            leaderboardBody.innerHTML = "";
+            data.leaderboard.forEach((user, index) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.username}</td>
+                    <td>${user.totalExpense || 0}</td>
+                `;
+                leaderboardBody.appendChild(tr);
+            });
+
+            leaderboardSection.style.display = "block";
+
+        } catch (err) {
+            console.error(err);
+            alert("Failed to fetch leaderboard");
+        }
+    });
+
+    // Check if user is already premium
+    (async () => {
+        try {
+            const res = await fetch("http://localhost:3000/expense/", {
+                headers: { "Authorization": `Bearer ${token}` },
+            });
+            if (res.status === 200) {
+                const { expenses } = await res.json();
+                // Optional: handle UI for premium users if needed
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    })();
+
     fetchExpenses();
 });

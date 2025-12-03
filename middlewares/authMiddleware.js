@@ -11,7 +11,11 @@ exports.authenticate = (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;   
+        req.user = {
+            userId: decoded.userId,
+            email: decoded.email,
+            isPremium: decoded.isPremium || false,
+        };   
 
         next();
 

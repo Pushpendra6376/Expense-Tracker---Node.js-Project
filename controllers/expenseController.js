@@ -1,5 +1,6 @@
 const Expense = require("../models/expense");
-
+const { fn, col } = require("sequelize");
+const User = require("../models/user");
 
 //Adding expense
 exports.addExpense = async (req, res) => {
@@ -51,5 +52,32 @@ exports.deleteExpenseById = async (req,res) =>{
         
     } catch (error) {
         res.status(500).json({error:"Something went wrong while deleting expense"});
+    }
+};
+
+
+exports.getLeaderboard = async (req, res) => {
+    try {
+        const leaderboard = await User.findAll({
+            attributes: [
+                "id",
+                "username",
+                [fn("SUM", col("Expenses.amount")), "totalExpense"]
+            ],
+            include: [
+                {
+                    model: Expense,
+                    attributes: []
+                }
+            ],
+            group: ["User.id"],
+            order: [[fn("SUM", col("Expenses.amount")), "DESC"]]
+        });
+
+        return res.status(200).json({ leaderboard });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Failed to fetch leaderboard" });
     }
 };

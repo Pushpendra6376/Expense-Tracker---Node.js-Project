@@ -6,5 +6,7 @@ const router = express.Router();
 router.post("", authenticate, expenseController.addExpense);
 router.get("/", authenticate, expenseController.getExpenses);
 router.delete("/delete/:id", authenticate, expenseController.deleteExpenseById);
+//to get leader board 
+router.get("/leaderboard", authenticate, expenseController.getLeaderboard);
 
 module.exports = router;

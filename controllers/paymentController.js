@@ -1,6 +1,7 @@
 const Payment = require("../models/payment");
 const { createCashfreeOrder } = require("../services/cashfreeService");
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
+const User = require("../models/user");
 
 // Initialize Cashfree
 const cashfree = new Cashfree(CFEnvironment.SANDBOX, process.env.CASHFREE_APPID, process.env.CASHFREE_SECRETKEY);
@@ -40,6 +41,14 @@ exports.verifyPayment = async (req, res) => {
     try {
         const { order_id } = req.query;
         console.log("🔍 VERIFY ORDER ID =>", order_id);
+
+        const paymentRecord = await Payment.findOne({ where: { orderId: order_id } });
+
+        if (!paymentRecord) {
+            return res.status(404).json({ message: "Order not found in database" });
+        }
+
+        const userId = paymentRecord.userId;
         
         const cfResponse = await cashfree.PGOrderFetchPayments(order_id);
         console.log("Cashfree Verify Data =>", cfResponse.data);
@@ -54,15 +63,21 @@ exports.verifyPayment = async (req, res) => {
                 { where: { orderId: order_id } }
             );
 
+            await User.update(
+                { isPremium: true },
+                { where: { id: userId } }
+            );
+
             return res.json({
                 message: "Payment Successful",
-                status: "SUCCESSFUL"
+                status: "SUCCESSFUL",
+                premium:true
             });
         }
 
         // Otherwise pending/failed
         await Payment.update(
-            { status: "PENDING" },
+            { status: "FAILED" },
             { where: { orderId: order_id } }
         );
 
