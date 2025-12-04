@@ -1,13 +1,15 @@
 const jwt = require("jsonwebtoken");
 
-
-// jwt authentication for our user and also Bearer token
 exports.authenticate = (req, res, next) => {
     try {
-        const token = req.headers['authorization']?.split(" ")[1]; 
-
-        if (!token) {
+        const authHeader = req.headers['authorization'];
+        if (!authHeader) {
             return res.status(401).json({ message: "Access Denied: No Token Provided" });
+        }
+
+        const token = authHeader.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ message: "Access Denied: Token Malformed" });
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -15,11 +17,11 @@ exports.authenticate = (req, res, next) => {
             userId: decoded.userId,
             email: decoded.email,
             isPremium: decoded.isPremium || false,
-        };   
+        };
 
         next();
-
     } catch (error) {
+        console.error(error);
         return res.status(401).json({ message: "Invalid or Expired Token" });
     }
 };

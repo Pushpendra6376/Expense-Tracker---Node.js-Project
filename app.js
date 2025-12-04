@@ -5,6 +5,7 @@ const sequelize = require("./utils/db-collection");
 const authRoutes = require("./routes/authRoute"); 
 const expenseRotues = require('./routes/expenseRoute');
 const paymentRoute = require('./routes/paymentRoute');
+const userRoute = require('./routes/userRoute');
 const app = express();
 
 // Middleware to accept JSON data
@@ -23,6 +24,7 @@ app.get('/expense.html', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/expense', expenseRotues);
 app.use('/payment', paymentRoute);
+app.use('/user', userRoute);
 
 // Database connection check
 sequelize.authenticate()
