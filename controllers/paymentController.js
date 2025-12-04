@@ -51,10 +51,10 @@ exports.verifyPayment = async (req, res) => {
         const userId = paymentRecord.userId;
         
         const cfResponse = await cashfree.PGOrderFetchPayments(order_id);
-        console.log("Cashfree Verify Data =>", cfResponse.data);
+        //console.log("Cashfree Verify Data =>", cfResponse.data);
 
         let payments = cfResponse.data;
-        console.log("Cashfree Payments =>", payments);
+        //console.log("Cashfree Payments =>", payments);
         const successPayment = payments.find(p => p.payment_status === "SUCCESS");
 
         if (successPayment) {
