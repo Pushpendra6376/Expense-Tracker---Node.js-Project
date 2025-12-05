@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt');
 const sequelize = require("../utils/db-collection");
 const jwt = require("jsonwebtoken");
 const User = require('../models/user')
+const TotalExpense = require('../models/totalExpense');
+
 
 // to create an user in our panel
 exports.signUp = async (req, res) =>{
@@ -23,6 +25,12 @@ exports.signUp = async (req, res) =>{
             password: hashedPassword,
         });
 
+        await TotalExpense.create({
+            userId: newUser.id,
+            totalExpense: 0
+        });
+
+        
         res.status(201).json({
             message: "User is registered successfully",
             user:{id:newUser.id, username, email}

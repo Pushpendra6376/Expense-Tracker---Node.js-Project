@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // -------------------
     // Membership Purchase
     membershipBtn.addEventListener("click", async () => {
         try {
@@ -63,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // -------------------
     // Show Leaderboard
     showLeaderboardBtn.addEventListener("click", async () => {
         try {
@@ -74,14 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (res.status === 200) {
                 const { leaderboard } = await res.json();
 
-                // Fast HTML generation
                 let html = "";
                 leaderboard.forEach((user, index) => {
                     html += `
                         <tr>
                             <td>${index + 1}</td>
                             <td>${user.username}</td>
-                            <td>${user.totalExpense || 0}</td>
+                            <td>${user.TotalExpense?.totalExpense || 0}</td>
                         </tr>
                     `;
                 });
@@ -93,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error(err);
         }
     });
+
 
     checkPremium();
 });

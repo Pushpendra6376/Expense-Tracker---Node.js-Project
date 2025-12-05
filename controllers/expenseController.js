@@ -1,6 +1,8 @@
 const Expense = require("../models/expense");
 const { fn, col } = require("sequelize");
 const User = require("../models/user");
+const TotalExpense = require("../models/totalExpense");
+
 
 //Adding expense
 exports.addExpense = async (req, res) => {
@@ -13,6 +15,12 @@ exports.addExpense = async (req, res) => {
             category,
             userId: req.user.userId  // from jwt middleware
         });
+
+        await TotalExpense.increment(
+            { totalExpense: amount },
+            { where: { userId: req.user.userId } }
+        );
+
 
         return res.status(201).json({ message:"Expense Added", expense });
 
@@ -40,13 +48,20 @@ exports.deleteExpenseById = async (req,res) =>{
         const expenseId = req.params.id;  
 
         // check if expense exists for logged-in user only
-        const deleted = await Expense.destroy({
+        const expense = await Expense.findOne({
             where: { id: expenseId, userId: req.user.userId }
         });
 
-        if(!deleted){
+        if(!expense){
             return res.status(404).json({message:"Expense not found or unauthorized"});
         }
+
+        await expense.destroy();
+
+        await TotalExpense.increment(
+            { totalExpense: -expense.amount },
+            { where: { userId: req.user.userId } }
+        );
 
         return res.status(200).json({message:"Expense deleted successfully"});
         
@@ -59,25 +74,19 @@ exports.deleteExpenseById = async (req,res) =>{
 exports.getLeaderboard = async (req, res) => {
     try {
         const leaderboard = await User.findAll({
-            attributes: [
-                "id",
-                "username",
-                [fn("SUM", col("Expenses.amount")), "totalExpense"]
-            ],
+            attributes: ["id", "username"],
             include: [
                 {
-                    model: Expense,
-                    attributes: []
+                    model: TotalExpense,
+                    attributes: ["totalExpense"]
                 }
             ],
-            group: ["User.id"],
-            order: [[fn("SUM", col("Expenses.amount")), "DESC"]]
+            order: [[TotalExpense, "totalExpense", "DESC"]]
         });
 
         return res.status(200).json({ leaderboard });
 
     } catch (error) {
-        console.log(error);
         res.status(500).json({ error: "Failed to fetch leaderboard" });
     }
 };

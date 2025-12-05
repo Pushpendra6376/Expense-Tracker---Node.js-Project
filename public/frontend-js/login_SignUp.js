@@ -1,4 +1,4 @@
-// Toggle between Sign Up and Login forms
+
 const signUpForm = document.querySelector('.sign-up');
 const loginForm = document.querySelector('.login');
 const showSignUpBtn = document.getElementById('showSignUp');
@@ -18,7 +18,7 @@ showLoginBtn.addEventListener('click', () => {
     showSignUpBtn.classList.remove('active');
 });
 
-// sending new user data to the backend
+
 signUpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -27,8 +27,6 @@ signUpForm.addEventListener('submit', async (e) => {
         email: document.getElementById("email").value,
         password: document.getElementById("password").value,
     };
-
-    console.log("Sign Up Data:", JSON.stringify(data, null, 2));
 
     try {
         const res = await fetch("http://localhost:3000/auth/signup", {
@@ -41,18 +39,20 @@ signUpForm.addEventListener('submit', async (e) => {
         console.log(result);
 
         if (res.status === 201) {
-            alert("User created successfully!");
-            window.location.href = "/expense.html"; 
+            showToast("Account created successfully!");
+            setTimeout(() => {
+                window.location.href = "/expense.html";
+            }, 1500);
         } else {
-            alert(result.message || "Signup failed");
+            showToast(result.message || "Signup failed");
         }
     } catch (err) {
         console.log(err);
-        alert("Something went wrong!");
+        showToast("Something went wrong!");
     }
 });
 
-// login for existing user 
+
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -60,8 +60,6 @@ loginForm.addEventListener('submit', async (e) => {
         email: document.getElementById("loginEmail").value,
         password: document.getElementById("loginPassword").value,
     };
-
-    console.log("Login Data:", JSON.stringify(data, null, 2));
 
     try {
         const res = await fetch("http://localhost:3000/auth/login", {
@@ -74,14 +72,19 @@ loginForm.addEventListener('submit', async (e) => {
         console.log(result);
 
         if (res.status === 200) {
-             localStorage.setItem("token", result.token);
-            alert("Login successful!");
-            window.location.href = "/expense.html"; 
+            localStorage.setItem("token", result.token);
+
+            showToast("Logged in successfully!");
+
+            setTimeout(() => {
+                window.location.href = "/expense.html";
+            }, 1500);
+
         } else {
-            alert(result.message || "Login failed");
+            showToast(result.message || "Login failed");
         }
     } catch (err) {
         console.log(err);
-        alert("Something went wrong!");
+        showToast("Something went wrong!");
     }
 });
