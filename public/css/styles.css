@@ -9,7 +9,6 @@
 body {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: flex-start;
     padding-top: 60px;
     background: #f5f7fb;
@@ -146,7 +145,7 @@ button[type="submit"]:hover {
     font-size: 15px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: right;
 }
 
 #expenseList button {
