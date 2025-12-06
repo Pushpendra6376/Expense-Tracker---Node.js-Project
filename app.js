@@ -33,7 +33,7 @@ sequelize.authenticate()
   .catch((err) => console.log("DB Connection is Failed:", err));
 
 // syncing our tables 
-sequelize.sync({alter:true})
+sequelize.sync()
   .then(() => console.log("All models synced successfully"))
   .catch((err) => console.log("Sync error:", err));
 
