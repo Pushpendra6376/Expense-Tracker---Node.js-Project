@@ -2,6 +2,7 @@ const Expense = require("../models/expense");
 const { fn, col } = require("sequelize");
 const User = require("../models/user");
 const TotalExpense = require("../models/totalExpense");
+const {predictCategory} = require("../services/geminiService")
 
 
 //Adding expense
@@ -9,10 +10,18 @@ exports.addExpense = async (req, res) => {
     try {
         const { amount, description, category } = req.body;
 
+        let finalCategory = category;
+
+        if (!finalCategory || finalCategory === "" || finalCategory === "Select Category") {
+            finalCategory = await predictCategory(description);
+        }
+        console.log("Predicted category:", finalCategory);
+
+
         const expense = await Expense.create({
             amount,
             description,
-            category,
+            category: finalCategory,
             userId: req.user.userId  // from jwt middleware
         });
 

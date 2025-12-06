@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoute");
 const expenseRotues = require('./routes/expenseRoute');
 const paymentRoute = require('./routes/paymentRoute');
 const userRoute = require('./routes/userRoute');
+
 const app = express();
 
 // Middleware to accept JSON data
