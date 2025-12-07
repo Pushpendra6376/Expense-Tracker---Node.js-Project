@@ -23,6 +23,11 @@ app.get('/expense.html', (req, res) => {
 });
 
 
+app.get('/reset-password.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'html', 'reset-password.html'));
+});
+
+
 app.use('/auth', authRoutes);
 app.use('/expense', expenseRotues);
 app.use('/payment', paymentRoute);
