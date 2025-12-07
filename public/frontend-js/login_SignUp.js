@@ -88,3 +88,28 @@ loginForm.addEventListener('submit', async (e) => {
         showToast("Something went wrong!");
     }
 });
+
+
+function showForgotForm() {
+    document.getElementById("forgot-form").style.display = "block";
+}
+
+async function forgotPassword() {
+    const email = document.getElementById("forgotEmail").value;
+
+    if (!email) {
+        alert("Please enter your email");
+        return;
+    }
+
+    try {
+        const response = await axios.post("http://localhost:3000/password/forgotpassword", {
+            email: email
+        });
+
+        alert(response.data.message);
+    } catch (error) {
+        console.log(error);
+        alert("Something went wrong while sending reset mail!");
+    }
+}

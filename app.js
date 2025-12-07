@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoute");
 const expenseRotues = require('./routes/expenseRoute');
 const paymentRoute = require('./routes/paymentRoute');
 const userRoute = require('./routes/userRoute');
+const forgotPasswordRoute = require('./routes/forgetPasswordRoute');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/auth', authRoutes);
 app.use('/expense', expenseRotues);
 app.use('/payment', paymentRoute);
 app.use('/user', userRoute);
+app.use('/password', forgotPasswordRoute)
 
 // Database connection check
 sequelize.authenticate()

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
     <title>Expense Login</title>
 </head>
+
 <body>
 
     <!-- for creating new user -->
-     <!-- it should create an user and also goes to next page in our case it should be his expense page  -->
+    <!-- it should create an user and also goes to next page in our case it should be his expense page  -->
     <div class="container">
 
         <!-- Toggle Buttons -->
@@ -39,8 +41,19 @@
             <button type="submit">Login</button>
         </form>
     </div>
+
+    <button onclick="showForgotForm()">Forgot Password?</button>
+
+    <div id="forgot-form" style="display:none;">
+        <h3>Forgot Password</h3>
+        <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+        <button onclick="forgotPassword()">Send Reset Mail</button>
+    </div>
+
     <div id="toast" class="toast"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./frontend-js/toast.js"></script>
     <script src="/frontend-js/login_SignUp.js"></script>
 </body>
+
 </html>

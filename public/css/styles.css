@@ -1,206 +1,428 @@
+:root {
+    /* Professional Color Palette */
+    --primary-color: #2c5282; /* Deep slate blue */
+    --secondary-color: #4a5568; /* Grayish blue text */
+    --accent-color: #3182ce; /* Brighter blue for actions */
+    --success-color: #48bb78; /* Green */
+    --danger-color: #e53e3e; /* Red */
+    --premium-color: #d69e2e; /* Gold/Dark Yellow */
+    --bg-body: #f0f4f8; /* Light gray-blue background */
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
     min-height: 100vh;
+    /* Changed alignment to handle different page layouts better */
     display: flex;
-    align-items: flex-start;
-    padding-top: 60px;
-    background: #f5f7fb;
-    color: #333;
+    flex-direction: column;
+    align-items: center; 
+    /* Increased top padding to make room for the header elements */
+    padding-top: 80px; 
+    padding-bottom: 40px;
+    background: var(--bg-body);
+    color: var(--secondary-color);
+    line-height: 1.5;
 }
 
+/* ==============================
+   Shared & Form Styles
+============================== */
 
-.container,
-.expense-container {
-    width: 380px;
+h1, h2 {
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
+/* General Buttons */
+button {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    border: none;
+}
+
+/* Form Inputs */
+input, textarea, select {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--primary-color);
+    background: #f8fafc;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+button[type="submit"] {
+    width: 100%;
+    background: var(--primary-color);
+    color: white;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+button[type="submit"]:hover {
+    background: #1a365d; /* Darker shade of primary */
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.hidden { display: none !important; }
+
+/* ==============================
+   Login / Signup Page Styles
+============================== */
+
+/* Redefining .container specifically for login/signup */
+body > .container {
+    width: 100%;
+    max-width: 450px; /* Wider than before */
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.form-box {
+    background: var(--bg-card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    animation: slideUpFade 0.4s ease forwards;
+}
+
+form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+}
 
 .toggle-box {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    background: #e2e8f0;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 25px;
 }
 
 .toggle-box button {
     flex: 1;
-    padding: 12px 0;
-    background: #dbe1ee;
-    border: none;
+    padding: 10px 0;
+    background: transparent;
+    color: var(--secondary-color);
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
 }
 
 .toggle-box button.active {
-    background: #4a72de;
-    color: #fff;
+    background: var(--bg-card);
+    color: var(--primary-color);
+    box-shadow: var(--shadow-sm);
 }
 
 
-.form-box {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    border: 1px solid #e1e5ea;
-    animation: fadeIn 0.3s ease;
-}
+/* ==============================
+   Expense App Page Styles
+============================== */
 
-.hidden { display: none; }
+/* --- Header Area (Premium & Membership) --- */
 
-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 22px;
-}
-
-
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 18px;
-    border: 1px solid #ccd1d7;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: 0.3s ease;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #5b8def;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(91, 141, 239, 0.18);
-}
-
-
-button[type="submit"] {
-    width: 100%;
-    background: #4a72de;
-    color: white;
-    border: none;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background: #3f61c9;
-}
-
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-.expense-container {
-    margin-top: 20px;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    border: 1px solid #e5e8ec;
-}
-
-.expense-container h1 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-#expenseForm label {
-    font-weight: 500;
-    margin-bottom: 6px;
-    display: block;
-}
-
-
-#expenseList {
-    list-style: none;
-    margin-top: 15px;
-}
-
-#expenseList li {
-    background: #eef2ff;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 15px;
+#premium-message {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    background: #fffbeb; /* Light yellow bg */
+    color: var(--premium-color);
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #fefcbf;
     display: flex;
-    justify-content: space-between;
-    align-items: right;
+    align-items: center;
 }
-
-#expenseList button {
-    padding: 6px 10px;
-    font-size: 13px;
-    background: #e74c3c;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-#expenseList button:hover {
-    background: #c0392b;
+/* Adding a little icon via CSS before the text */
+#premium-message::before {
+    content: '👑';
+    margin-right: 8px;
 }
 
 .membership {
     position: absolute;
     top: 20px;
-    right: 25px;
+    right: 30px;
+    display: flex;
+    gap: 10px;
 }
 
-.membership button {
-    background: #ffb800;
-    color: #000;
-    font-weight: 600;
-    padding: 10px 14px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
+#buy-premium {
+    background: var(--premium-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: var(--shadow-md);
     font-size: 14px;
-    transition: 0.3s ease;
-    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.membership button:hover {
-    background: #e5a200;
-    transform: translateY(-1px);
+#buy-premium:hover {
+    background: #b7791f;
+    transform: translateY(-2px);
 }
 
+#show-leaderboard {
+    background: var(--bg-card);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+}
+#show-leaderboard:hover {
+    background: #ebf8ff;
+}
+
+
+/* --- Main Expense Container Layout (The complex part) --- */
+
+.expense-container {
+    background: var(--bg-card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    width: 90%; /* Much wider */
+    max-width: 1200px; /* Max width for large screens */
+    margin-top: 20px;
+
+    /* CSS GRID MAGIC to rearrange the flat HTML structure */
+    display: grid;
+    /* Define columns: Left side fixed width, Right side takes remaining space */
+    grid-template-columns: 350px 1fr; 
+    /* Define rows */
+    grid-template-rows: auto auto 1fr; 
+    gap: 20px 40px; /* Row gap, Column gap */
+}
+
+/* Placement: Main Heading spans across top */
+.expense-container h1 {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: left;
+    font-size: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 0;
+}
+
+/* Placement: Expense Form on the left, spanning down */
+#expenseForm {
+    grid-column: 1;
+    grid-row: 2 / span 2; /* Starts row 2, goes down */
+}
+
+/* Placement: "Expense List" Header on the right */
+.expense-container h2 {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0 !important; /* Override inline style */
+    font-size: 22px;
+    align-self: end; /* Align text to bottom of its grid cell */
+}
+
+/* Placement: The actual UL list below its header on the right */
+#expenseList {
+    grid-column: 2;
+    grid-row: 3;
+    list-style: none;
+    margin-top: 0 !important;
+    max-height: 500px; /* Optional: scrollable list if too long */
+    overflow-y: auto;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+/* --- Expense List Item Styling --- */
+
+#expenseList li {
+    background: white;
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+}
+
+#expenseList li:hover {
+    transform: translateX(5px);
+    border-color: var(--accent-color);
+}
+
+/* Styling the content inside the list item (assuming JS adds spans) */
+#expenseList li span {
+    font-weight: 500;
+}
+/* Assuming the amount gets a specific class or is the first span, 
+   let's make it pop. Adjust based on your actual JS output */
+#expenseList li span:first-child {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.1em;
+}
+
+#expenseList button {
+    padding: 8px 12px;
+    font-size: 13px;
+    background: white;
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+#expenseList button:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* --- Leaderboard Section --- */
+#leaderboard-section {
+    width: 90%;
+    max-width: 1200px;
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 40px;
+}
+
+#leaderboard-section h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none; /* Remove default border */
+}
+
+table thead th {
+    background: #f1f5f9;
+    color: var(--primary-color);
+    font-weight: 700;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+table tbody td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--secondary-color);
+}
+
+table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+
+/* --- Toast Notifications --- */
 .toast {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #333;
+    top: 90px; /* Below header */
+    right: 30px;
+    background: var(--primary-color);
     color: white;
-    padding: 12px 20px;
-    border-radius: 6px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
     opacity: 0;
+    transform: translateY(-20px);
     pointer-events: none;
-    transition: opacity 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 9999;
+    font-weight: 600;
 }
 
 .toast.show {
     opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animations */
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 850px) {
+    .expense-container {
+        /* Stack them back vertically on tablets/phones */
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 20px;
+    }
+    
+    /* Reset grid placements for single column view */
+    .expense-container h1, 
+    #expenseForm, 
+    .expense-container h2, 
+    #expenseList {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    /* Adjust header elements for smaller screens */
+    body {
+        padding-top: 140px; /* More space for stacked header items */
+    }
+    #premium-message {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        white-space: nowrap;
+    }
+    .membership {
+        top: 70px;
+        right: 50%;
+        transform: translateX(50%);
+    }
 }
