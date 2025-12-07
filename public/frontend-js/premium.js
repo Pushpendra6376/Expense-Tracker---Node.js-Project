@@ -16,13 +16,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (res.status === 200) {
                 const { user } = await res.json();
+                
+                // Get the new Download Button
+                const downloadBtn = document.getElementById("download-expense-btn");
 
                 if (user?.isPremium) {
+                    // Show existing premium UI
                     premiumMessage.style.display = "block";
                     showLeaderboardBtn.style.display = "inline-block";
+                    
+                    // --- NEW: Enable Download Button ---
+                    if(downloadBtn) {
+                        downloadBtn.disabled = false;
+                        downloadBtn.innerHTML = "Download Report 📥";
+                        downloadBtn.title = "Download your expenses";
+                    }
                 } else {
+                    // Hide/Disable premium UI
                     premiumMessage.style.display = "none";
                     showLeaderboardBtn.style.display = "none";
+                    
+                    // --- NEW: Disable Download Button ---
+                    if(downloadBtn) {
+                        downloadBtn.disabled = true;
+                        downloadBtn.innerHTML = "Download Report 🔒";
+                        downloadBtn.title = "Upgrade to Premium to download";
+                    }
                 }
             }
         } catch (err) {

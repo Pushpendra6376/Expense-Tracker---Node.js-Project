@@ -426,3 +426,105 @@ table tbody tr:hover {
         transform: translateX(50%);
     }
 }
+
+.report-container {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    width: 90%;
+    max-width: 1200px;
+    margin-top: 30px; /* Space below the add expense form */
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.report-header h3 {
+    color: var(--primary-color); /* Matches your existing teal/blue theme */
+    font-size: 24px;
+}
+
+.report-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.report-controls select, 
+.report-controls input {
+    margin-bottom: 0; /* Override generic input margin */
+    padding: 8px 12px;
+    width: auto;
+}
+
+/* Table Styling matching the image (Teal Header) */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.report-table th {
+    background-color: #5f9ea0; /* CadetBlue / Teal color from image */
+    color: white;
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #4a8b8d;
+}
+
+.report-table td {
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    color: #333;
+}
+
+.report-table tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+.report-table tfoot td {
+    background-color: #e6fffa;
+    border-top: 2px solid #5f9ea0;
+}
+
+/* Download Button Styling */
+.report-actions {
+    text-align: right;
+}
+
+.btn-download {
+    background-color: #4a5568; /* Default gray when disabled */
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transition: 0.3s;
+    width: auto;
+    display: inline-block;
+}
+
+/* When Javascript enables it, we change the class or style */
+.btn-download:enabled {
+    background-color: var(--primary-color); /* Active Blue */
+    cursor: pointer;
+    opacity: 1;
+}
+
+.btn-download:enabled:hover {
+    background-color: #2b6cb0;
+}
