@@ -52,17 +52,33 @@ exports.addExpense = async (req, res) => {
 };
 
 // fetching expense for a perticular user
-exports.getExpenses = async (req,res)=>{
-    try{
-        const expenses = await Expense.findAll({ where:{ userId: req.user.userId }});
+exports.getExpenses = async (req, res) => {
+    try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
 
-        return res.status(200).json({ expenses });
+        const result = await Expense.findAndCountAll({
+            where: { userId: req.user.userId },
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]],
+        });
 
-    }catch(err){
-        res.status(500).json({ error:"Failed to fetch expenses"});
+        res.status(200).json({
+            expenses: result.rows,
+            totalItems: result.count,
+            currentPage: page,
+            hasNextPage: limit * page < result.count,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(result.count / limit),
+        });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch expenses" });
     }
 };
-
 
 // deleting the expense
 exports.deleteExpenseById = async (req,res) =>{

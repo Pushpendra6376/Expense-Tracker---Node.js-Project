@@ -528,3 +528,32 @@ table tbody tr:hover {
 .btn-download:enabled:hover {
     background-color: #2b6cb0;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+}
+
+.pagination button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
+    background: var(--bg-card);
+    font-size: 14px;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.pagination button:hover {
+    background: #ebf8ff;
+}
+
+.pagination .active-page {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
