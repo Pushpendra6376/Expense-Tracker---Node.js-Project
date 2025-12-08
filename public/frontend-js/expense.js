@@ -5,11 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const pagination = document.getElementById("pagination");
 
     let currentPage = 1;
-    const limit = 5;  
+    let savedLimit = localStorage.getItem("expensesPerPage");
+    const limitSelect = document.getElementById("expenses-per-page");
+    let limit = savedLimit ? Number(savedLimit) : 5;
+    limitSelect.value = limit;  
     let lastPage = 1;
 
     let allExpenses = []; // this array is For report generation only
 
+    limitSelect.addEventListener("change", () => {
+      limit = Number(limitSelect.value);
+      localStorage.setItem("expensesPerPage", limit);
+      loadExpenses(1); // reload page 1 with new limit
+  });
     //loading expense with our pagination
     async function loadExpenses(page = 1) {
         try {
