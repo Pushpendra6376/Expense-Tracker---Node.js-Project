@@ -10,7 +10,7 @@ const sequelize = require("../utils/db-collection");
 exports.addExpense = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const { amount, description, category } = req.body;
+        const { amount, description, category, note } = req.body;
 
         let finalCategory = category;
 
@@ -24,6 +24,7 @@ exports.addExpense = async (req, res) => {
             amount,
             description,
             category: finalCategory,
+            note: note || null,
             userId: req.user.userId  // from jwt middleware
         }, { transaction: t });
 

@@ -40,9 +40,9 @@ sequelize.authenticate()
   .catch((err) => console.log("DB Connection is Failed:", err));
 
 // syncing our tables 
-sequelize.sync()
-  .then(() => console.log("All models synced successfully"))
-  .catch((err) => console.log("Sync error:", err));
+// sequelize.sync()
+//   .then(() => console.log("All models synced successfully"))
+//   .catch((err) => console.log("Sync error:", err));
 
 
 const PORT = process.env.PORT || 3000;

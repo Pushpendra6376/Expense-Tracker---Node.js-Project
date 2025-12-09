@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         expenses.forEach((exp) => {
             html += `
                 <li>
-                    ${exp.amount} - ${exp.description} - ${exp.category}
+                    ${exp.amount} - ${exp.description} - ${exp.category} - ${exp.note ? exp.note : ""}
                     <button data-id="${exp.id}" class="del-btn">Delete</button>
                 </li>
             `;
@@ -162,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
             amount: document.getElementById("amount").value,
             description: document.getElementById("description").value,
             category: document.getElementById("category").value,
+            note: document.getElementById("note").value
         };
 
         try {
