@@ -19,7 +19,6 @@ exports.addExpense = async (req, res) => {
         }
         //console.log("Predicted category:", finalCategory);
 
-
         const expense = await Expense.create({
             amount,
             description,
