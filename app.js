@@ -8,6 +8,8 @@ const paymentRoute = require('./routes/paymentRoute');
 const userRoute = require('./routes/userRoute');
 const forgotPasswordRoute = require('./routes/forgetPasswordRoute');
 
+console.log(process.env.NODE_ENV);
+
 const app = express();
 
 // Middleware to accept JSON data
@@ -45,7 +47,7 @@ sequelize.authenticate()
 //   .catch((err) => console.log("Sync error:", err));
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
