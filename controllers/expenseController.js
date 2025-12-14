@@ -1,5 +1,4 @@
 const Expense = require("../models/expense");
-const { fn, col } = require("sequelize");
 const User = require("../models/user");
 const TotalExpense = require("../models/totalExpense");
 const {predictCategory} = require("../services/geminiService")
@@ -135,6 +134,3 @@ exports.getLeaderboard = async (req, res) => {
         res.status(500).json({ error: "Failed to fetch leaderboard" });
     }
 };
-
-
-

@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     limitSelect.value = limit;  
     let lastPage = 1;
 
-    let allExpenses = []; // this array is For report generation only
 
     limitSelect.addEventListener("change", () => {
       limit = Number(limitSelect.value);
@@ -34,9 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
             currentPage = data.currentPage;
             lastPage = data.lastPage;
 
-  
-            await fetchAllExpenses();
-
             renderExpenseList(expenses);
 
             buildPagination();
@@ -46,20 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function fetchAllExpenses() {
-        try {
-            const res = await fetch(`${BASE_URL}/expense?limit=5000`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            const data = await res.json();
-            allExpenses = data.expenses;
-            updateReport();
-
-        } catch (e) {
-            console.log("Error fetching all:", e);
-        }
-    }
 
     function renderExpenseList(expenses) {
         let html = "";
@@ -154,7 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     
     // ADD EXPENSE
-   
     expenseForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -202,85 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error(err);
         }
     }
-
-    // REPORT TABLE
-
-    function updateReport() {
-        const filterType = document.getElementById("filter-type");
-        const filterMonth = document.getElementById("filter-month");
-        const reportBody = document.getElementById("report-table-body");
-
-        const type = filterType.value;
-        const selected = new Date(filterMonth.value);
-
-        reportBody.innerHTML = "";
-
-        let totalIncome = 0;
-        let totalExpense = 0;
-
-        const filtered = allExpenses.filter((exp) => {
-            const d = new Date(exp.createdAt);
-            return (
-                d.getFullYear() === selected.getFullYear() &&
-                d.getMonth() === selected.getMonth()
-            );
-        });
-
-        filtered.forEach((exp) => {
-            const isIncome = exp.category.toLowerCase() === "income" ||
-                             exp.category.toLowerCase() === "salary";
-
-            const amt = parseFloat(exp.amount);
-
-            if (isIncome) totalIncome += amt;
-            else totalExpense += amt;
-
-            reportBody.innerHTML += `
-                <tr>
-                    <td>${exp.createdAt.split("T")[0]}</td>
-                    <td>${exp.description}</td>
-                    <td>${exp.category}</td>
-                    <td>${isIncome ? amt : ""}</td>
-                    <td>${!isIncome ? amt : ""}</td>
-                </tr>
-            `;
-        });
-
-        document.getElementById("report-total-income").innerText = totalIncome.toFixed(2);
-        document.getElementById("report-total-expense").innerText = totalExpense.toFixed(2);
-
-        let savings = totalIncome - totalExpense;
-        document.getElementById("report-savings").innerText = `₹ ${savings.toFixed(2)}`;
-    }
-
-    // to download the report for offline access
-    downloadBtn.addEventListener("click", () => {
-        if (allExpenses.length === 0) {
-            alert("No expenses found!");
-            return;
-        }
-
-        let csv = "Date,Description,Category,Income,Expense\n";
-
-        allExpenses.forEach((exp) => {
-            const isIncome =
-                exp.category.toLowerCase() === "income" ||
-                exp.category.toLowerCase() === "salary";
-
-            csv += `${exp.createdAt.split("T")[0]},${exp.description},${exp.category},${
-                isIncome ? exp.amount : ""
-            },${!isIncome ? exp.amount : ""}\n`;
-        });
-
-        const blob = new Blob([csv], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "expenses_report.csv";
-        a.click();
-        URL.revokeObjectURL(url);
-    });
 
     loadExpenses(1);
 });

@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const sequelize = require("../utils/db-collection");
 const jwt = require("jsonwebtoken");
 const User = require('../models/user')
 const TotalExpense = require('../models/totalExpense');
