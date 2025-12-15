@@ -9,4 +9,6 @@ router.delete("/delete/:id", authenticate, expenseController.deleteExpenseById);
 //to get leader board 
 router.get("/leaderboard", authenticate, expenseController.getLeaderboard);
 
+router.get("/report-data", authenticate, expenseController.getExpensesForReport);
+
 module.exports = router;

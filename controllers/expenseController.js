@@ -1,11 +1,11 @@
 const Expense = require("../models/expense");
 const User = require("../models/user");
 const TotalExpense = require("../models/totalExpense");
-const {predictCategory} = require("../services/geminiService")
+const { predictCategory } = require("../services/geminiService");
 const sequelize = require("../utils/db-collection");
+const { Op } = require("sequelize"); // [Fix: Import Op]
 
-
-//Adding expense
+// ... existing addExpense ...
 exports.addExpense = async (req, res) => {
     const t = await sequelize.transaction();
     try {
@@ -16,17 +16,16 @@ exports.addExpense = async (req, res) => {
         if (!finalCategory || finalCategory === "" || finalCategory === "Select Category") {
             finalCategory = await predictCategory(description);
         }
-        //console.log("Predicted category:", finalCategory);
 
         const expense = await Expense.create({
             amount,
             description,
             category: finalCategory,
             note: note || null,
-            userId: req.user.userId  // from jwt middleware
+            userId: req.user.userId
         }, { transaction: t });
 
-        // 2. Updating total expense using transaction
+        // Updating total expense
         const total = await TotalExpense.findOne({ where: { userId: req.user.userId }, transaction: t });
         if (total) {
             total.totalExpense = Number(total.totalExpense) + Number(amount);
@@ -38,11 +37,8 @@ exports.addExpense = async (req, res) => {
             }, { transaction: t });
         }
 
-        // Commit transaction
         await t.commit();
-
-
-        return res.status(201).json({ message:"Expense Added", expense });
+        return res.status(201).json({ message: "Expense Added", expense });
 
     } catch (error) {
         await t.rollback();
@@ -50,7 +46,7 @@ exports.addExpense = async (req, res) => {
     }
 };
 
-// fetching expense for a perticular user
+// ... existing getExpenses ...
 exports.getExpenses = async (req, res) => {
     try {
         const page = Number(req.query.page) || 1;
@@ -79,21 +75,20 @@ exports.getExpenses = async (req, res) => {
     }
 };
 
-// deleting the expense
-exports.deleteExpenseById = async (req,res) =>{
+// ... existing deleteExpenseById ...
+exports.deleteExpenseById = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const expenseId = req.params.id;  
+        const expenseId = req.params.id;
 
-        // check if expense exists for logged-in user only
         const expense = await Expense.findOne({
             where: { id: expenseId, userId: req.user.userId },
             transaction: t
         });
 
-        if(!expense){
+        if (!expense) {
             await t.rollback();
-            return res.status(404).json({message:"Expense not found or unauthorized"});
+            return res.status(404).json({ message: "Expense not found or unauthorized" });
         }
 
         await expense.destroy({ transaction: t });
@@ -105,16 +100,15 @@ exports.deleteExpenseById = async (req,res) =>{
         }
 
         await t.commit();
+        return res.status(200).json({ message: "Expense deleted successfully" });
 
-        return res.status(200).json({message:"Expense deleted successfully"});
-        
     } catch (error) {
         await t.rollback();
-        res.status(500).json({error:"Something went wrong while deleting expense"});
+        res.status(500).json({ error: "Something went wrong while deleting expense" });
     }
 };
 
-
+// ... existing getLeaderboard ...
 exports.getLeaderboard = async (req, res) => {
     try {
         const leaderboard = await User.findAll({
@@ -132,5 +126,34 @@ exports.getLeaderboard = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+};
+
+// [Fix: New method for Report Data]
+exports.getExpensesForReport = async (req, res) => {
+    try {
+        const { month } = req.query; // Expected format: YYYY-MM
+        let whereClause = { userId: req.user.userId };
+
+        if (month) {
+            const start = new Date(month + "-01");
+            const end = new Date(month + "-01");
+            end.setMonth(end.getMonth() + 1);
+
+            whereClause.createdAt = {
+                [Op.gte]: start,
+                [Op.lt]: end
+            };
+        }
+
+        const expenses = await Expense.findAll({
+            where: whereClause,
+            order: [["createdAt", "ASC"]] // Chronological order for reports
+        });
+
+        res.status(200).json({ expenses });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch report data" });
     }
 };
