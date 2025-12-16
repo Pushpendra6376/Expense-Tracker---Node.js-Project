@@ -3,8 +3,6 @@ const jwt = require("jsonwebtoken");
 const User = require('../models/user')
 const TotalExpense = require('../models/totalExpense');
 
-
-// to create an user in our panel
 exports.signUp = async (req, res) =>{
     try {
         const {username, email, password} = req.body;
@@ -14,8 +12,6 @@ exports.signUp = async (req, res) =>{
             return res.status(400).json({message: "Email is already registered"})
         }
 
-
-        //Hased encryption for user password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await User.create({
@@ -28,7 +24,6 @@ exports.signUp = async (req, res) =>{
             userId: newUser.id,
             totalExpense: 0
         });
-
         
         res.status(201).json({
             message: "User is registered successfully",
@@ -40,7 +35,6 @@ exports.signUp = async (req, res) =>{
     }
 }
 
-// when its comes to login we will verify user email and password and then let him login 
 exports.login = async (req,res) =>{
     try {
         const {email, password} = req.body;
@@ -50,23 +44,20 @@ exports.login = async (req,res) =>{
             return res.status(404).json({message:"User not found"});
         }
 
-        //we will validate the password is correct or not
         const validPass = await bcrypt.compare(password, user.password);
         if(!validPass){
             return res.status(401).json({message: "password is incorrect"});
         }
 
-
-        //verifying the user with the jwt token
+        // [UPDATED] Removed isPremium from token to prevent staleness
         const token = jwt.sign({ 
             userId: user.id, 
-            email: user.email,
-            isPremium: user.isPremium   // premium checking before logging in  
+            email: user.email
         },
             process.env.JWT_SECRET,
             { expiresIn: "24h" }
         );
-        // for sucessfully login 
+
         res.status(200).json({
             message:"User logged in successfully",
             token: token,
@@ -80,6 +71,4 @@ exports.login = async (req,res) =>{
     } catch (error) {
         res.status(500).json({ error: "Something went wrong!"});
     }
-
 }
-

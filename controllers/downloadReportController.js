@@ -2,6 +2,17 @@ const Expense = require('../models/expense');
 const DownloadedReport = require('../models/downloadedReport');
 const {uploadToS3} = require('../utils/s3');
 
+// Helper to safely format CSV fields (handles commas and quotes)
+const escapeCsv = (field) => {
+    if (field == null) return '';
+    const stringField = String(field);
+    // Agar field me comma ya newline hai, toh usko quotes me wrap karo
+    if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+        return `"${stringField.replace(/"/g, '""')}"`;
+    }
+    return stringField;
+};
+
 exports.downloadExpenseReport = async (req, res) => {
     try {
         if (!req.user.isPremium) {
@@ -11,26 +22,39 @@ exports.downloadExpenseReport = async (req, res) => {
         const expenses = await Expense.findAll({
             where: { userId: req.user.userId },
             order: [["createdAt", "ASC"]],
+            raw: true // Memory optimization: Sequelize object ki jagah plain JSON layega
         });
 
         if (!expenses.length) {
             return res.status(400).json({ message: "No expenses found" });
         }
 
-        let csv = "Date,Description,Category,Income,Expense\n";
-
-        expenses.forEach(exp => {
-            const isIncome =
-                exp.category.toLowerCase() === "income" ||
+        // CSV Header
+        const header = ["Date", "Description", "Category", "Income", "Expense"];
+        
+        // Use Array map & join instead of string concatenation (Faster & Cleaner)
+        const csvRows = expenses.map(exp => {
+            const isIncome = 
+                exp.category.toLowerCase() === "income" || 
                 exp.category.toLowerCase() === "salary";
 
-            csv += `${exp.createdAt.toISOString().split("T")[0]},${exp.description},${exp.category},${isIncome ? exp.amount : ""},${!isIncome ? exp.amount : ""}\n`;
+            return [
+                exp.createdAt.toISOString().split("T")[0],
+                escapeCsv(exp.description), // Fix: Comma issue handled
+                escapeCsv(exp.category),
+                isIncome ? exp.amount : "",
+                !isIncome ? exp.amount : ""
+            ].join(",");
         });
+
+        // Combine header and rows
+        const csvData = [header.join(","), ...csvRows].join("\n");
 
         const fileName = `expense-${Date.now()}.csv`;
         const fileKey = `reports/${req.user.userId}/${fileName}`;
 
-        const fileUrl = await uploadToS3(csv, fileKey);
+        // Upload to S3
+        const fileUrl = await uploadToS3(csvData, fileKey);
 
         await DownloadedReport.create({
             userId: req.user.userId,
@@ -41,7 +65,7 @@ exports.downloadExpenseReport = async (req, res) => {
         res.status(200).json({ fileUrl });
 
     } catch (err) {
-        console.error(err);
+        console.error("Report Generation Error:", err);
         res.status(500).json({ message: "Download failed" });
     }
 };

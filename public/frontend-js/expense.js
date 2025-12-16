@@ -54,19 +54,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // [UPDATED] Secure rendering to prevent XSS
     function renderExpenseList(expenses) {
-        let html = "";
+        expenseList.innerHTML = ""; // Clear existing list
+        
         expenses.forEach((exp) => {
-            html += `
-                <li>
-                    <span>${exp.amount}</span> - ${exp.description} - ${exp.category} 
-                    <button data-id="${exp.id}" class="del-btn">Delete</button>
-                </li>
-            `;
-        });
-        expenseList.innerHTML = html;
-        document.querySelectorAll(".del-btn").forEach((btn) => {
-            btn.addEventListener("click", () => deleteExpense(btn.dataset.id));
+            const li = document.createElement("li");
+
+            // Create text content safely
+            const textSpan = document.createElement("span");
+            textSpan.textContent = `${exp.amount} - ${exp.description} - ${exp.category}`;
+
+            // Create delete button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.classList.add("del-btn");
+            deleteBtn.dataset.id = exp.id;
+            deleteBtn.addEventListener("click", () => deleteExpense(exp.id));
+
+            li.appendChild(textSpan);
+            li.appendChild(deleteBtn);
+            expenseList.appendChild(li);
         });
     }
 
@@ -125,25 +133,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         expenses.forEach(exp => {
             const date = new Date(exp.createdAt).toLocaleDateString();
-            // Determine if category represents income (simple string check)
             const isIncome = ["salary", "income"].includes(exp.category.toLowerCase());
             
             if (isIncome) {
-                incomeTotal += exp.amount;
+                incomeTotal += Number(exp.amount); // Ensure number addition
             } else {
-                expenseTotal += exp.amount;
+                expenseTotal += Number(exp.amount);
             }
 
-            const row = `
-                <tr>
-                    <td>${date}</td>
-                    <td>${exp.description}</td>
-                    <td>${exp.category}</td>
-                    <td>${isIncome ? exp.amount : ""}</td>
-                    <td>${!isIncome ? exp.amount : ""}</td>
-                </tr>
-            `;
-            reportTableBody.innerHTML += row;
+            // Using textContent for cells where possible or careful construction
+            const row = document.createElement("tr");
+            
+            const dateCell = document.createElement("td");
+            dateCell.textContent = date;
+            
+            const descCell = document.createElement("td");
+            descCell.textContent = exp.description;
+            
+            const catCell = document.createElement("td");
+            catCell.textContent = exp.category;
+            
+            const incomeCell = document.createElement("td");
+            incomeCell.textContent = isIncome ? exp.amount : "";
+            
+            const expenseCell = document.createElement("td");
+            expenseCell.textContent = !isIncome ? exp.amount : "";
+
+            row.append(dateCell, descCell, catCell, incomeCell, expenseCell);
+            reportTableBody.appendChild(row);
         });
 
         reportTotalIncome.innerText = incomeTotal.toFixed(2);

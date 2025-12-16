@@ -9,7 +9,7 @@ const userRoute = require('./routes/userRoute');
 const forgotPasswordRoute = require('./routes/forgetPasswordRoute');
 const reportRoutes = require("./routes/reportRoute");
 
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 
 const app = express();
 

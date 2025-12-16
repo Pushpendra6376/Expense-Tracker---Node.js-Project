@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user"); // Import User model
 
-exports.authenticate = (req, res, next) => {
+exports.authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
         if (!authHeader) {
@@ -13,10 +14,18 @@ exports.authenticate = (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // [UPDATED] Fetch fresh user data from DB to get current premium status
+        const user = await User.findByPk(decoded.userId);
+        
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+
         req.user = {
-            userId: decoded.userId,
-            email: decoded.email,
-            isPremium: decoded.isPremium || false,
+            userId: user.id,
+            email: user.email,
+            isPremium: user.isPremium, // Fresh status from DB
         };
 
         next();
