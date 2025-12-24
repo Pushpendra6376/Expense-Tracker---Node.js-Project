@@ -20,7 +20,6 @@ yarn-error.log*
 .cache/
 dist/
 build/
-
 # Nodemon ignore
 nodemon-debug.log
 
