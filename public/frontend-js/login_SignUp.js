@@ -29,7 +29,7 @@ signUpForm.addEventListener('submit', async (e) => {
     };
 
     try {
-        const res = await fetch("http://localhost:3000/auth/signup", {
+        const res = await fetch(`${BASE_URL}/auth/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -62,7 +62,7 @@ loginForm.addEventListener('submit', async (e) => {
     };
 
     try {
-        const res = await fetch("http://localhost:3000/auth/login", {
+        const res = await fetch(`${BASE_URL}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -103,7 +103,7 @@ async function forgotPassword() {
     }
 
     try {
-        const response = await axios.post("http://localhost:3000/password/forgotpassword", {
+        const response = await axios.post(`${BASE_URL}/password/forgotpassword`, {
             email: email
         });
 
