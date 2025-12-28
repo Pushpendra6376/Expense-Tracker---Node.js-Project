@@ -8,7 +8,7 @@ const paymentRoute = require('./routes/paymentRoute');
 const userRoute = require('./routes/userRoute');
 const forgotPasswordRoute = require('./routes/forgetPasswordRoute');
 const reportRoutes = require("./routes/reportRoute");
-
+// const cors = require('cors');
 // console.log(process.env.NODE_ENV);
 
 const app = express();
