@@ -3,7 +3,7 @@ const signUpForm = document.querySelector('.sign-up');
 const loginForm = document.querySelector('.login');
 const showSignUpBtn = document.getElementById('showSignUp');
 const showLoginBtn = document.getElementById('showLogin');
-
+const BASE_URL = "http://13.203.205.165/";
 showSignUpBtn.addEventListener('click', () => {
     signUpForm.classList.remove('hidden');
     loginForm.classList.add('hidden');
