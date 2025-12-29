@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const selectedMonth = reportMonthInput.value;
         try {
-            const res = await fetch(`${BASE_URL}/expense/report-data?month=${selectedMonth}`, {
+            const res = await fetch(`/expense/report-data?month=${selectedMonth}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const res = await fetch(`${BASE_URL}/expense`, {
+            const res = await fetch(`/expense`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                 body: JSON.stringify(data),
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function deleteExpense(id) {
         try {
-            const res = await fetch(`${BASE_URL}/expense/delete/${id}`, {
+            const res = await fetch(`/expense/delete/${id}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             });

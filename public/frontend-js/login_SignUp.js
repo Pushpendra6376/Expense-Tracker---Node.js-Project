@@ -29,7 +29,7 @@ signUpForm.addEventListener('submit', async (e) => {
     };
 
     try {
-        const res = await fetch(`${BASE_URL}/auth/signup`, {
+        const res = await fetch(`/auth/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -62,7 +62,7 @@ loginForm.addEventListener('submit', async (e) => {
     };
 
     try {
-        const res = await fetch(`${BASE_URL}/auth/login`, {
+        const res = await fetch(`/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -103,7 +103,7 @@ async function forgotPassword() {
     }
 
     try {
-        const response = await axios.post(`${BASE_URL}/password/forgotpassword`, {
+        const response = await axios.post(`/password/forgotpassword`, {
             email: email
         });
 

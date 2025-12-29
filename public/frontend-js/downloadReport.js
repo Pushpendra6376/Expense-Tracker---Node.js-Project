@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     downloadBtn.addEventListener("click", async () => {
         try {
-            const res = await fetch(`${BASE_URL}/report/download`, {
+            const res = await fetch(`/report/download`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

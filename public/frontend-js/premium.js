@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Premium Check
     async function checkPremium() {
         try {
-            const res = await fetch(`${BASE_URL}/user/me`, {
+            const res = await fetch(`/user/me`, {
                 headers: { "Authorization": `Bearer ${token}` },
             });
 
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Membership Purchase
     membershipBtn.addEventListener("click", async () => {
         try {
-            const res = await fetch(`${BASE_URL}/payment/order`, {
+            const res = await fetch(`/payment/order`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show Leaderboard
     showLeaderboardBtn.addEventListener("click", async () => {
         try {
-            const res = await fetch(`${BASE_URL}/expense/leaderboard`, {
+            const res = await fetch(`/expense/leaderboard`, {
                 headers: { "Authorization": `Bearer ${token}` },
             });
 
