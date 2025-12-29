@@ -1,6 +1,6 @@
 // Common Shared Values
 const token = localStorage.getItem("token");
-const BASE_URL = "http://13.203.205.165/";
+const BASE_URL = process.env.BASE_URL;
 const cashfree = Cashfree({ mode: "sandbox" });
 
 if (!token) {
