@@ -1,8 +1,10 @@
-
 const signUpForm = document.querySelector('.sign-up');
 const loginForm = document.querySelector('.login');
 const showSignUpBtn = document.getElementById('showSignUp');
 const showLoginBtn = document.getElementById('showLogin');
+
+/* ---------------- TOGGLE FORMS ---------------- */
+
 showSignUpBtn.addEventListener('click', () => {
     signUpForm.classList.remove('hidden');
     loginForm.classList.add('hidden');
@@ -17,9 +19,13 @@ showLoginBtn.addEventListener('click', () => {
     showSignUpBtn.classList.remove('active');
 });
 
+/* ---------------- SIGNUP ---------------- */
 
 signUpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // 🔴 Clear any old/expired token
+    localStorage.removeItem("token");
 
     const data = {
         username: document.getElementById("name").value,
@@ -35,10 +41,16 @@ signUpForm.addEventListener('submit', async (e) => {
         });
 
         const result = await res.json();
-        console.log(result);
+        console.log("Signup Response:", result);
 
         if (res.status === 201) {
+            // ✅ SAVE TOKEN FROM BACKEND
+            if (result.token) {
+                localStorage.setItem("token", result.token);
+            }
+
             showToast("Account created successfully!");
+
             setTimeout(() => {
                 window.location.href = "/expense.html";
             }, 1500);
@@ -46,11 +58,12 @@ signUpForm.addEventListener('submit', async (e) => {
             showToast(result.message || "Signup failed");
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         showToast("Something went wrong!");
     }
 });
 
+/* ---------------- LOGIN ---------------- */
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -68,9 +81,10 @@ loginForm.addEventListener('submit', async (e) => {
         });
 
         const result = await res.json();
-        console.log(result);
+        console.log("Login Response:", result);
 
         if (res.status === 200) {
+            // ✅ SAVE TOKEN
             localStorage.setItem("token", result.token);
 
             showToast("Logged in successfully!");
@@ -78,16 +92,16 @@ loginForm.addEventListener('submit', async (e) => {
             setTimeout(() => {
                 window.location.href = "/expense.html";
             }, 1500);
-
         } else {
             showToast(result.message || "Login failed");
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         showToast("Something went wrong!");
     }
 });
 
+/* ---------------- FORGOT PASSWORD ---------------- */
 
 function showForgotForm() {
     document.getElementById("forgot-form").style.display = "block";
@@ -108,7 +122,7 @@ async function forgotPassword() {
 
         alert(response.data.message);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         alert("Something went wrong while sending reset mail!");
     }
 }

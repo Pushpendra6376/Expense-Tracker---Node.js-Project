@@ -3,37 +3,49 @@ const jwt = require("jsonwebtoken");
 const User = require('../models/user')
 const TotalExpense = require('../models/totalExpense');
 
-exports.signUp = async (req, res) =>{
-    try {
-        const {username, email, password} = req.body;
+exports.signUp = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
 
-        const existingUser = await User.findOne({where: {email}});
-        if(existingUser){
-            return res.status(400).json({message: "Email is already registered"})
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await User.create({
-            username,
-            email,
-            password: hashedPassword,
-        });
-
-        await TotalExpense.create({
-            userId: newUser.id,
-            totalExpense: 0
-        });
-        
-        res.status(201).json({
-            message: "User is registered successfully",
-            user:{id:newUser.id, username, email}
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Something went wrong!"});
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email is already registered" });
     }
-}
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    await TotalExpense.create({
+      userId: newUser.id,
+      totalExpense: 0,
+    });
+
+    const token = jwt.sign(
+      { userId: newUser.id, email: newUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: {
+        id: newUser.id,
+        username,
+        email,
+        isPremium: false,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+
 
 exports.login = async (req,res) =>{
     try {
