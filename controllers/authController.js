@@ -60,11 +60,11 @@ exports.login = async (req,res) =>{
         if(!validPass){
             return res.status(401).json({message: "password is incorrect"});
         }
-
-        // [UPDATED] Removed isPremium from token to prevent staleness
+        
         const token = jwt.sign({ 
             userId: user.id, 
-            email: user.email
+            email: user.email,
+            isPremium: user.isPremium
         },
             process.env.JWT_SECRET,
             { expiresIn: "24h" }

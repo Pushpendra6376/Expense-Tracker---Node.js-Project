@@ -9,7 +9,7 @@ const DownloadedReport = sequelize.define("DownloadedReport", {
         primaryKey: true
     },
     fileUrl: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT("long"),
         allowNull: false
     },
     fileName: {

@@ -1,6 +1,6 @@
 
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-gradient: linear-gradient(135deg, #a3afe1 0%, #bdafdc 100%);
     --glass-bg: rgba(255, 255, 255, 0.95);
     --input-bg: #f8f9fa;
     --text-color: #333;
@@ -29,7 +29,7 @@ body {
     top: 20px;
     left: 20px;
     z-index: 1000;
-    background: linear-gradient(135deg, #0dff00, #62ff00);
+    background: linear-gradient(135deg, #173515, #324923);
     color: #fff !important;
     padding: 10px 20px;
     border-radius: 30px;
@@ -102,8 +102,8 @@ body {
 }
 
 #expenseForm button {
-    background: var(--primary-gradient);
-    color: white;
+    background: rgb(30, 46, 89);
+    color: rgb(240, 224, 224);
     margin-top: 20px;
     padding: 14px;
     font-size: 1rem;
@@ -178,25 +178,19 @@ textarea {
     text-align: left;
 }
 
-/* 2. SPECIFIC FIX: Alignment for 'Expenses per page' Label and Select */
 
-/* Label को block से हटाकर inline-block बनाया */
 .expense-container label[for="expenses-per-page"] {
     margin-left: 360px;
-    /* यह लाइन में रहने के लिए जरूरी है */
     display: inline-block;
     width: auto;
     margin-bottom: 0;
     margin-right: 10px;
-    /* थोड़ा गैप */
     vertical-align: middle;
 }
 
-/* Select Dropdown को छोटा और inline बनाया */
 #expenses-per-page {
     display: inline-block;
     width: auto;
-    /* Full width नहीं लेगा */
     min-width: 70px;
     padding: 8px;
     margin-top: 0;
@@ -276,7 +270,6 @@ textarea {
     transform: scale(1.1);
 }
 
-/* Report Table */
 .report-header {
     display: flex;
     flex-wrap: wrap;
@@ -309,7 +302,7 @@ th {
     font-weight: 600;
 }
 
-/* Leaderboard Popup & Mobile Media Query */
+
 #leaderboard-section {
     position: fixed;
     top: 50%;
@@ -376,7 +369,7 @@ th {
         margin-left: 0;
     }
 
-    /* Mobile par margin hata diya */
+
     .membership {
         position: relative;
         top: 0;
